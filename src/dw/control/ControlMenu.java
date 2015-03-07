@@ -1,4 +1,5 @@
 package dw.control;
+import dw.Editor;
 import dw.graphics.GraphicsFont;
 import dw.graphics.GraphicsStyle;
 import dw.input.InputKeyboard;
@@ -23,10 +24,10 @@ public class ControlMenu
 	private int optCount = 0;
 	private String[] optText = new String[10];
 	private String[] optType = new String[10];
+	private String[] optTypeTarget = new String[10];
 	private String[] optRefNexus = new String[10];
 	private boolean[] optSelect = new boolean[10];
 	private ControlMenu[] optLinkMenu = new ControlMenu[10];
-	private Module[] optLinkModule = new Module[10];
 	private int optLinkActive = 0; 
 	
 	public ControlMenu(String newRef, int newPosX, int newPosY, int newSizeX, InputMouse mouse)
@@ -64,35 +65,26 @@ public class ControlMenu
 	
 	public int optionAdd(String newText, InputMouse mouse)
 	{
+		return optionAdd(newText, mouse, "", "");
+	}
+	
+	public int optionAdd(String newText, InputMouse mouse, String newType)
+	{
+		return optionAdd(newText, mouse, newType, "");
+	}
+	
+	public int optionAdd(String newText, InputMouse mouse, String newType, String newTypeTarget)
+	{
 		int newOpt = optCount;
 		optText[optCount] = newText;
-		optType[optCount] = "";
+		optType[newOpt] = newType;
+		optTypeTarget[newOpt] = newTypeTarget;
 		String newNexus = menuRef + "-opt" + optCount;
 		mouse.nexusAdd(newNexus, menuPosX, menuPosY+(35*optCount), menuSizeX, 35);
 		optRefNexus[optCount] = newNexus;
 		optSelect[optCount] = false;
 		optCount += 1;
-		return optCount;
-	}
-	
-	public void optionAdd(String newText, InputMouse mouse, String newKeyword)
-	{
-		int newOpt = optionAdd(newText, mouse);
-		optType[newOpt] = newKeyword;
-	}
-	
-	public void optionAdd(String newText, InputMouse mouse, Module newModule)
-	{
-		int newOpt = optionAdd(newText, mouse);
-		optType[newOpt] = "MODULE";
-		optLinkModule[newOpt] = newModule;
-	}
-	
-	public void optionAdd(String newText, InputMouse mouse, ControlMenu newMenu)
-	{
-		int newOpt = optionAdd(newText, mouse);
-		optType[newOpt] = "MENU";
-		optLinkMenu[newOpt] = newMenu;
+		return newOpt;
 	}
 	
 	public void render(Graphics g, InputMouse mouse)
@@ -120,9 +112,13 @@ public class ControlMenu
 			{
 				if(mouse.mouseNexusClick==optRefNexus[opt])
 				{
+					// Debug
+					System.out.println("Clicked on the "+optText[opt]+" option");
+					System.out.println("...requesting "+optType[opt]+" "+optTypeTarget[opt]);
+					
 					if(optType[opt]=="MODULE")
 					{
-						optLinkActive = opt;
+						Editor.appModules.requestModule(optTypeTarget[opt]);
 						menuActive = false;
 					}
 					mouse.mouseActionDone();

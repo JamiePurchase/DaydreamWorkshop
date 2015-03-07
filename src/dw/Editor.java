@@ -4,6 +4,7 @@ import dw.input.InputKeyboard;
 import dw.input.InputMouse;
 import dw.module.Module;
 import dw.module.ModuleApp;
+import dw.module.ModuleManager;
 import dw.module.ModuleProjectNew;
 
 import java.awt.Graphics;
@@ -26,11 +27,7 @@ public class Editor extends JPanel implements Runnable
 	public InputKeyboard appKeyboard;
 	public InputMouse appMouse;
 	public static boolean appMouseListenClick = true;
-	
-	// Module
-	private int moduleActive;
-	private Module[] moduleArray = new Module[10];
-	private int moduleCount;
+	public static ModuleManager appModules;
 	
 	public Editor(int width, int height)
 	{
@@ -44,35 +41,7 @@ public class Editor extends JPanel implements Runnable
 		appMouse = new InputMouse();
 		addMouseListener (appMouse);
 		appDisplay = new EditorDisplay("Daydream Workshop", appWidth, appHeight, appKeyboard, appMouse);
-		moduleInit();
-	}
-	
-	public Module moduleGetActive()
-	{
-		return moduleArray[moduleActive];
-	}
-	
-	private void moduleInit()
-	{
-		moduleNew(new ModuleApp(appWidth, appHeight, appKeyboard, appMouse), true, 0);
-		moduleSetActive(0);
-		moduleCount = 1;
-	}
-	
-	public void moduleNew(Module newModule, boolean newFocus)
-	{
-		moduleNew(newModule, newFocus, moduleCount);
-	}
-	
-	public void moduleNew(Module newModule, boolean newFocus, int newPosition)
-	{
-		moduleArray[newPosition] = newModule;
-		if(newFocus==true){moduleSetActive(newPosition);}
-	}
-	
-	public void moduleSetActive(int active)
-	{
-		moduleActive = active;
+		appModules = new ModuleManager(appWidth, appHeight, appKeyboard, appMouse);
 	}
 
 	private void render()
@@ -84,7 +53,7 @@ public class Editor extends JPanel implements Runnable
 			return;
 		}
 		appGraphics = appBufferStrategy.getDrawGraphics();
-		moduleGetActive().render(appGraphics, appWidth, appHeight, appKeyboard, appMouse);
+		appModules.getActive().render(appGraphics, appWidth, appHeight, appKeyboard, appMouse);
 		appBufferStrategy.show();
 		appGraphics.dispose();
 	}
@@ -171,16 +140,13 @@ public class Editor extends JPanel implements Runnable
 		// See if any menu options have been clicked on
 		//moduleGetActive();
 	
-		moduleGetActive().tick(appKeyboard, appMouse);
+		appModules.getActive().tick(appKeyboard, appMouse);
 	}
 	
 	private void tickTest1()
 	{
 		System.out.println("  ~ Editor Test 1 ~  ");
 		appKeyboard.keyPressedDone();
-		moduleNew(new ModuleProjectNew(appWidth, appHeight, appKeyboard, appMouse, 0, 0, appWidth, appHeight), true, 1);
-		moduleSetActive(1);
-		moduleCount = 2;
 		
 		// Test 1
 		FileWrite fw = new FileWrite("C:/Eclipse/Workspace/Daydream/data/editor/test1.dwec", false);
