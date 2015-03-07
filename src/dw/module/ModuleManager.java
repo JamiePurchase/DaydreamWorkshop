@@ -10,6 +10,10 @@ public class ModuleManager
 	private InputKeyboard appKeyboard;
 	private InputMouse appMouse;
 	
+	// Dialog
+	private String dialogRequest;
+	private boolean dialogRequestActive = false;
+	
 	// Modules
 	private int moduleActive;
 	private Module[] moduleArray = new Module[10];
@@ -44,6 +48,28 @@ public class ModuleManager
 	{
 		if(module=="ProjectNew"){return new ModuleProjectNew(appWidth, appHeight, appKeyboard, appMouse, 0, 0, appWidth, appHeight);}
 		return new ModuleApp(appWidth, appHeight, appKeyboard, appMouse);
+	}
+	
+	public void requestDialog(String dialog)
+	{
+		dialogRequest = dialog;
+		dialogRequestActive = true;
+	}
+	
+	public boolean requestDialogActive()
+	{
+		return dialogRequestActive;
+	}
+	
+	public void requestDialogDone()
+	{
+		dialogRequest = "";
+		dialogRequestActive = false;
+	}
+	
+	public String requestDialogString()
+	{
+		return dialogRequest;
 	}
 	
 	public void requestModule(String module)

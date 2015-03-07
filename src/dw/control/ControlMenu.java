@@ -112,6 +112,11 @@ public class ControlMenu
 			{
 				if(mouse.mouseNexusClick==optRefNexus[opt])
 				{
+					if(optType[opt]=="DIALOG")
+					{
+						Editor.appModules.requestDialog(optTypeTarget[opt]);
+						menuActive = false;
+					}
 					if(optType[opt]=="MODULE")
 					{
 						Editor.appModules.requestModule(optTypeTarget[opt]);

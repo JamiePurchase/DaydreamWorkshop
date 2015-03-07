@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 public class InputKeyboard implements KeyListener
 {
 	private static String keyPressed = "None";
+	private static boolean keyPressedAlpha = false;
 	private static String keyReleased = "None";
 	private boolean keyModifierAlt = false;
 	private boolean keyModifierShift = false;
@@ -13,6 +14,11 @@ public class InputKeyboard implements KeyListener
 	public static String getKeyPressed()
 	{
 		return keyPressed;
+	}
+	
+	public static boolean getKeyPressedAlpha()
+	{
+		return keyPressedAlpha;
 	}
 	
 	public static String getKeyReleased()
@@ -52,6 +58,8 @@ public class InputKeyboard implements KeyListener
         // Temp
         if(e.getKeyCode() == KeyEvent.VK_ALT){keyModifierAlt = true;}
         if(e.getKeyCode() == KeyEvent.VK_SHIFT){keyModifierAlt = true;}
+        
+        // NOTE: Do some checks and set keyPressedAlpha to true if a letter was typed
     }
 
     public void keyReleased(KeyEvent e)

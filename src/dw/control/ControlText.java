@@ -40,6 +40,11 @@ public class ControlText
 		textFocusFrame = 1;
 		textFocusTick = 0;
 	}
+	
+	public boolean hasFocus()
+	{
+		return textFocus;
+	}
 
 	public void render(Graphics g, InputMouse mouse)
 	{

@@ -1,6 +1,9 @@
 package dw.module;
+import dw.Editor;
+import dw.control.ControlDialog;
 import dw.control.ControlFrame;
 import dw.control.ControlMenu;
+import dw.control.ControlText;
 import dw.control.ControlToolbar;
 import dw.file.FileTest;
 import dw.graphics.GraphicsDrawing;
@@ -11,8 +14,16 @@ import dw.input.InputMouse;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import javax.swing.tree.DefaultTreeCellEditor.EditorContainer;
+
 public class ModuleApp extends Module
 {
+	private int appWidth;
+	private int appHeight;
+	private InputKeyboard appKeyboard;
+	private InputMouse appMouse;
+	private ControlDialog moduleDialog;
+	private boolean moduleDialogActive = false;
 	private ControlFrame moduleFrame;
 	private ControlToolbar moduleToolbar;
 	private boolean moduleBkgImageActive;
@@ -20,9 +31,24 @@ public class ModuleApp extends Module
 	
 	public ModuleApp(int width, int height, InputKeyboard keyboard, InputMouse mouse)
 	{
+		appWidth = width;
+		appHeight = height;
+		appKeyboard = keyboard;
+		appMouse = mouse;
 		initBackground(width, height);
 		initFrame(width, height, keyboard, mouse);
 		initToolbar(width, height, keyboard, mouse);
+	}
+	
+	public void dialogRequest(String dialog)
+	{
+		if(dialog=="ProjectNew")
+		{
+			moduleDialog = new ControlDialog("New Project", (appWidth/2)-400, (appHeight/2)-250, 800, 500);
+			moduleDialogActive = true;
+			moduleDialog.formAddText(new ControlText("NewProjectName", 30, 400, 400, 200, 50, appMouse), true);
+		}
+		Editor.appModules.requestDialogDone();
 	}
 	
 	public ControlToolbar getModuleToolbar()
@@ -49,7 +75,7 @@ public class ModuleApp extends Module
 		// Project Menu
 		int toolbarProjectID = moduleToolbar.optionAdd("PROJECT", "MENU", 25, 120, mouse);
 		ControlMenu toolbarProjectMenu = new ControlMenu("ToolbarAppMenuProject", 10, 75, 200, mouse);
-		toolbarProjectMenu.optionAdd("NEW PROJECT", mouse, "MODULE", "ProjectNew");
+		toolbarProjectMenu.optionAdd("NEW PROJECT", mouse, "DIALOG", "ProjectNew");
 		toolbarProjectMenu.optionAdd("OPEN PROJECT", mouse, "MODULE", "ProjectOpen");
 		toolbarProjectMenu.optionAdd("EXIT EDITOR", mouse, "QUIT");
 		moduleToolbar.optionAttachMenu(toolbarProjectID, toolbarProjectMenu);
@@ -74,6 +100,7 @@ public class ModuleApp extends Module
 		renderBackground(g, width, height);
 		moduleFrame.render(g, mouse);
 		moduleToolbar.render(g, keyboard, mouse);
+		if(moduleDialogActive){moduleDialog.render(g, mouse);}
 	}
 	
 	public void renderBackground(Graphics g, int width, int height)
@@ -87,14 +114,19 @@ public class ModuleApp extends Module
 	
 	public void tick(InputKeyboard keyboard, InputMouse mouse)
 	{
-		if(mouse.mouseActionPressedL && mouse.mouseNexusClick=="")
+		if(Editor.appModules.requestDialogActive()){dialogRequest(Editor.appModules.requestDialogString());}
+		if(moduleDialogActive){moduleDialog.tick(keyboard, mouse);}
+		else
 		{
-			moduleToolbar.menuCloseAll();
-			mouse.mouseActionDone();
+			if(mouse.mouseActionPressedL && mouse.mouseNexusClick=="")
+			{
+				moduleToolbar.menuCloseAll();
+				mouse.mouseActionDone();
+			}
+			moduleFrame.tick(keyboard, mouse);
+			moduleToolbar.tick(keyboard, mouse);
+			//mouse.mouseActionDone();
 		}
-		moduleFrame.tick(keyboard, mouse);
-		moduleToolbar.tick(keyboard, mouse);
-		//mouse.mouseActionDone();
 	}
 
 }
