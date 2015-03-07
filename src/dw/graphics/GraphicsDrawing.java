@@ -35,7 +35,7 @@ public class GraphicsDrawing
 	
 	public static BufferedImage getImage(String filepath)
 	{
-		filepath = "C:/Eclipse/Workspace/Daydream/res/" + filepath;
+		filepath = "C:/Eclipse/Workspace/Daydream/src/res/" + filepath;
 		BufferedImage image = null;
 		try
 		{

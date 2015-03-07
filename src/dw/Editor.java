@@ -165,37 +165,46 @@ public class Editor extends JPanel implements Runnable
 	public void tick()
 	{
 		// Temp
-		if(appKeyboard.getKeyPressed()=="Enter")
-		{
-			System.out.println("ENTER");
-			appKeyboard.keyPressedDone();
-			moduleNew(new ModuleProjectNew(appWidth, appHeight, appKeyboard, appMouse, 0, 0, appWidth, appHeight), true, 1);
-			moduleSetActive(1);
-			moduleCount = 2;
-			
-			// Test 1
-			FileWrite fw = new FileWrite("C:/Eclipse/Workspace/Daydream/data/editor/test1.dwec", false);
-			try {
-				fw.FileWriteLine("Hello world");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			// Test 2
-			/*fw = new FileWrite("C:/Eclipse/Workspace/Daydream/data/editor/test2.txt", true);
-			String[] myArray = new String[5];
-			myArray[0] = "Hello";
-			myArray[1] = "Hiya";
-			myArray[2] = "";
-			myArray[3] = "Hoho";
-			fw.FileWriteArray(myArray);*/
-		}
+		if(appKeyboard.getKeyPressed()=="Enter"){tickTest1();}
+		if(appKeyboard.getKeyPressed()=="Escape"){tickTest2();}
 		
 		// See if any menu options have been clicked on
 		//moduleGetActive();
 	
 		moduleGetActive().tick(appKeyboard, appMouse);
+	}
+	
+	private void tickTest1()
+	{
+		System.out.println("  ~ Editor Test 1 ~  ");
+		appKeyboard.keyPressedDone();
+		moduleNew(new ModuleProjectNew(appWidth, appHeight, appKeyboard, appMouse, 0, 0, appWidth, appHeight), true, 1);
+		moduleSetActive(1);
+		moduleCount = 2;
+		
+		// Test 1
+		FileWrite fw = new FileWrite("C:/Eclipse/Workspace/Daydream/data/editor/test1.dwec", false);
+		try {
+			fw.FileWriteLine("Hello world");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Test 2
+		/*fw = new FileWrite("C:/Eclipse/Workspace/Daydream/data/editor/test2.txt", true);
+		String[] myArray = new String[5];
+		myArray[0] = "Hello";
+		myArray[1] = "Hiya";
+		myArray[2] = "";
+		myArray[3] = "Hoho";
+		fw.FileWriteArray(myArray);*/
+	}
+	
+	private void tickTest2()
+	{
+		System.out.println("  ~ Editor Test 2 ~  ");
+		appKeyboard.keyPressedDone();
 	}
 
 }

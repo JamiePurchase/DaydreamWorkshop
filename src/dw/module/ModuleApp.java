@@ -3,6 +3,7 @@ import dw.control.ControlFrame;
 import dw.control.ControlMenu;
 import dw.control.ControlToolbar;
 import dw.file.FileTest;
+import dw.graphics.GraphicsDrawing;
 import dw.graphics.GraphicsStyle;
 import dw.input.InputKeyboard;
 import dw.input.InputMouse;
@@ -82,6 +83,9 @@ public class ModuleApp extends Module
 	{
 		g.setColor(GraphicsStyle.getColour("FrameBackground"));
 		g.fillRect(0, 0, width, height);
+		
+		// Test
+		g.drawImage(GraphicsDrawing.getImage("ui/logo.png"), (width/2)-150, (height/2)-200+20, null);
 	}
 	
 	public void tick(InputKeyboard keyboard, InputMouse mouse)
