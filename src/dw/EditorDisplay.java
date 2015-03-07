@@ -4,6 +4,8 @@ import dw.input.InputMouse;
 
 import java.awt.Canvas;
 import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -25,9 +27,6 @@ public class EditorDisplay
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		
-		// Debug
-		System.out.println("Width: " + width + ", Height: " + height);
-		
 		// Create a JPanel
 		JPanel panel = new JPanel();
 		panel.addKeyListener(keyboard);
@@ -45,6 +44,12 @@ public class EditorDisplay
 		// Add the canvas to the frame
 		frame.add(canvas);
 		frame.pack();
+		
+		// Center the frame in Windows
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Point middle = new Point(screenSize.width / 2, screenSize.height / 2);
+		Point newLocation = new Point(middle.x - (frame.getWidth() / 2), middle.y - (frame.getHeight() / 2));
+		frame.setLocation(newLocation);
 	}
 	
 	public Canvas getCanvas()

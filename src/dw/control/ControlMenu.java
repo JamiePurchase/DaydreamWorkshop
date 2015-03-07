@@ -112,14 +112,16 @@ public class ControlMenu
 			{
 				if(mouse.mouseNexusClick==optRefNexus[opt])
 				{
-					// Debug
-					System.out.println("Clicked on the "+optText[opt]+" option");
-					System.out.println("...requesting "+optType[opt]+" "+optTypeTarget[opt]);
-					
 					if(optType[opt]=="MODULE")
 					{
 						Editor.appModules.requestModule(optTypeTarget[opt]);
 						menuActive = false;
+					}
+					if(optType[opt]=="QUIT")
+					{
+						menuActive = false;
+						// Note: We should prompt the user to save if there are outstanding changes
+						System.exit(0);
 					}
 					mouse.mouseActionDone();
 				}

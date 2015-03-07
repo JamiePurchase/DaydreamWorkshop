@@ -12,6 +12,8 @@ public class ControlText
 	private String textValue;
 	private int textLength;
 	private boolean textFocus;
+	private int textFocusFrame;
+	private int textFocusTick;
 	private int textPosX;
 	private int textPosY;
 	private int textSizeX;
@@ -31,6 +33,13 @@ public class ControlText
 		textNexus = newRef;
 		mouse.nexusAdd(textNexus, textPosX, textPosY, textSizeX, textSizeY);
 	}
+	
+	public void focus()
+	{
+		textFocus = true;
+		textFocusFrame = 1;
+		textFocusTick = 0;
+	}
 
 	public void render(Graphics g, InputMouse mouse)
 	{
@@ -43,14 +52,25 @@ public class ControlText
 		g.drawRect(textPosX, textPosY, textSizeX, textSizeY);
 		
 		// Value
-		g.setFont(GraphicsFont.getFont("InputText"));
+		g.setFont(GraphicsFont.getFont("InputValue"));
 		g.setColor(GraphicsStyle.getColour("InputText"));
-		g.drawString(textValue, textPosX+15, textPosY+15);
+		String textDraw = textValue;
+		if(textFocus==true && textFocusFrame==1){textDraw += "|";}
+		g.drawString(textDraw, textPosX+15, textPosY+15);
 	}
 	
 	public void tick(InputKeyboard keyboard, InputMouse mouse)
 	{
-		
+		if(textFocus==true)
+		{
+			textFocusTick += 1;
+			if(textFocusTick>=10)
+			{
+				textFocusFrame += 1;
+				textFocusTick = 0;
+				if(textFocusFrame>2){textFocusFrame = 1;}
+			}
+		}
 	}
 	
 	public void valueAppend(String newText)

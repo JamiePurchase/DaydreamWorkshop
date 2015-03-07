@@ -1,4 +1,5 @@
 package dw;
+import dw.application.AppWorkshop;
 import dw.file.FileWrite;
 import dw.input.InputKeyboard;
 import dw.input.InputMouse;
@@ -28,11 +29,24 @@ public class Editor extends JPanel implements Runnable
 	public InputMouse appMouse;
 	public static boolean appMouseListenClick = true;
 	public static ModuleManager appModules;
+	private String appModule;
+	private boolean appPause = false;
 	
-	public Editor(int width, int height)
+	public Editor(String module, int width, int height)
 	{
+		this.appModule = module;
 		this.appHeight = height;
 		this.appWidth = width;
+	}
+	
+	public void editorPause(boolean pause)
+	{
+		appPause = pause;
+	}
+	
+	public boolean editorPaused()
+	{
+		return appPause;
 	}
 	
 	private void init()
@@ -41,7 +55,7 @@ public class Editor extends JPanel implements Runnable
 		appMouse = new InputMouse();
 		addMouseListener (appMouse);
 		appDisplay = new EditorDisplay("Daydream Workshop", appWidth, appHeight, appKeyboard, appMouse);
-		appModules = new ModuleManager(appWidth, appHeight, appKeyboard, appMouse);
+		appModules = new ModuleManager(appModule, appWidth, appHeight, appKeyboard, appMouse);
 	}
 
 	private void render()
@@ -83,7 +97,7 @@ public class Editor extends JPanel implements Runnable
 			{
 				appThreadTick+= 1;
 				tick();
-				render();
+				if(!editorPaused()){render();}
 				ticks++;
 				delta--;
 			}
@@ -133,14 +147,22 @@ public class Editor extends JPanel implements Runnable
 	
 	public void tick()
 	{
-		// Temp
-		if(appKeyboard.getKeyPressed()=="Enter"){tickTest1();}
-		if(appKeyboard.getKeyPressed()=="Escape"){tickTest2();}
+		if(editorPaused())
+		{
+			if(appKeyboard.getKeyPressed()=="Space"){tickTest3();}
+		}
+		else
+		{
+			// Temp
+			if(appKeyboard.getKeyPressed()=="Enter"){tickTest1();}
+			if(appKeyboard.getKeyPressed()=="Escape"){tickTest2();}
+			
+			// See if any menu options have been clicked on
+			//moduleGetActive();
 		
-		// See if any menu options have been clicked on
-		//moduleGetActive();
-	
-		appModules.getActive().tick(appKeyboard, appMouse);
+			// Module Tick
+			appModules.getActive().tick(appKeyboard, appMouse);
+		}
 	}
 	
 	private void tickTest1()
@@ -171,6 +193,23 @@ public class Editor extends JPanel implements Runnable
 	{
 		System.out.println("  ~ Editor Test 2 ~  ");
 		appKeyboard.keyPressedDone();
+		
+		// Test
+		String[] arguments = new String[3];
+		arguments[0] = "ProjectNew";
+		arguments[1] = "800";
+		arguments[2] = "500";
+		AppWorkshop.main(arguments);
+		editorPause(true);
+	}
+	
+	private void tickTest3()
+	{
+		System.out.println("  ~ Editor Test 3 ~  ");
+		appKeyboard.keyPressedDone();
+		
+		// Temp
+		editorPause(false);
 	}
 
 }

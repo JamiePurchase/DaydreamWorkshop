@@ -23,9 +23,6 @@ public class ModuleApp extends Module
 		initBackground(width, height);
 		initFrame(width, height, keyboard, mouse);
 		initToolbar(width, height, keyboard, mouse);
-		
-		// Test
-		//FileTest fileTest = new FileTest();
 	}
 	
 	public ControlToolbar getModuleToolbar()
@@ -50,7 +47,7 @@ public class ModuleApp extends Module
 		moduleToolbar = new ControlToolbar("ToolbarApp", 10, 40, width-20, 35);
 		
 		// Project Menu
-		int toolbarProjectID = moduleToolbar.optionAdd("PROJECT", "MENU", 33, 120, mouse);
+		int toolbarProjectID = moduleToolbar.optionAdd("PROJECT", "MENU", 25, 120, mouse);
 		ControlMenu toolbarProjectMenu = new ControlMenu("ToolbarAppMenuProject", 10, 75, 200, mouse);
 		toolbarProjectMenu.optionAdd("NEW PROJECT", mouse, "MODULE", "ProjectNew");
 		toolbarProjectMenu.optionAdd("OPEN PROJECT", mouse, "MODULE", "ProjectOpen");
@@ -65,7 +62,7 @@ public class ModuleApp extends Module
 		moduleToolbar.optionAttachMenu(toolbarEditorID, toolbarEditorMenu);
 		
 		// Help Menu
-		int toolbarHelpID = moduleToolbar.optionAdd("HELP", "MENU", 273, 100, mouse);
+		int toolbarHelpID = moduleToolbar.optionAdd("HELP", "MENU", 286, 120, mouse);
 		ControlMenu toolbarHelpMenu = new ControlMenu("ToolbarAppMenuHelp", 250, 75, 160, mouse);
 		toolbarHelpMenu.optionAdd("GUIDE", mouse);
 		toolbarHelpMenu.optionAdd("ABOUT", mouse);
@@ -90,6 +87,11 @@ public class ModuleApp extends Module
 	
 	public void tick(InputKeyboard keyboard, InputMouse mouse)
 	{
+		if(mouse.mouseActionPressedL && mouse.mouseNexusClick=="")
+		{
+			moduleToolbar.menuCloseAll();
+			mouse.mouseActionDone();
+		}
 		moduleFrame.tick(keyboard, mouse);
 		moduleToolbar.tick(keyboard, mouse);
 		//mouse.mouseActionDone();

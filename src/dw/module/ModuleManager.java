@@ -15,13 +15,13 @@ public class ModuleManager
 	private Module[] moduleArray = new Module[10];
 	private int moduleCount;
 	
-	public ModuleManager(int width, int height, InputKeyboard keyboard, InputMouse mouse)
+	public ModuleManager(String module, int width, int height, InputKeyboard keyboard, InputMouse mouse)
 	{
 		appWidth = width;
 		appHeight = height;
 		appKeyboard = keyboard;
 		appMouse = mouse;
-		moduleArray[0] = new ModuleApp(width, height, keyboard, mouse);
+		moduleArray[0] = getModule(module);
 		moduleActive = 0;
 		moduleCount = 1;
 	}
@@ -38,6 +38,12 @@ public class ModuleManager
 	public Module getActive()
 	{
 		return moduleArray[moduleActive];
+	}
+	
+	private Module getModule(String module)
+	{
+		if(module=="ProjectNew"){return new ModuleProjectNew(appWidth, appHeight, appKeyboard, appMouse, 0, 0, appWidth, appHeight);}
+		return new ModuleApp(appWidth, appHeight, appKeyboard, appMouse);
 	}
 	
 	public void requestModule(String module)

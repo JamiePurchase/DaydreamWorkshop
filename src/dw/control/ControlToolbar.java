@@ -1,4 +1,5 @@
 package dw.control;
+import dw.graphics.GraphicsDrawing;
 import dw.graphics.GraphicsFont;
 import dw.graphics.GraphicsStyle;
 import dw.input.InputKeyboard;
@@ -37,7 +38,15 @@ public class ControlToolbar
 		toolbarSizeY = newSizeY;
 	}
 	
-	private void menuCloseAllOthers(int id)
+	public void menuCloseAll()
+	{
+		for(int opt=0;opt<optCount;opt+=1)
+		{
+			optChildMenu[opt].menuSetActive(false);
+		}
+	}
+	
+	public void menuCloseAllOthers(int id)
 	{
 		for(int opt=0;opt<optCount;opt+=1)
 		{
@@ -56,9 +65,9 @@ public class ControlToolbar
 		optTextX[optCount] = newTextX;
 		optSizeX[optCount] = newSizeX;
 		if(optCount>0){optPosX[optCount] = optPosX[optCount-1]+optSizeX[optCount-1];}
-		else{optPosX[optCount] = toolbarPosX+1;}
+		else{optPosX[optCount] = toolbarPosX;}
 		String newNexus = toolbarRef + "-opt" + optCount;
-		mouse.nexusAdd(newNexus, optPosX[optCount], toolbarPosY+1, optSizeX[optCount], toolbarSizeY-1);
+		mouse.nexusAdd(newNexus, optPosX[optCount], toolbarPosY, optSizeX[optCount], toolbarSizeY);
 		optRefNexus[optCount] = newNexus;
 		optSelect[optCount] = false;
 		optCount += 1;
@@ -82,14 +91,20 @@ public class ControlToolbar
 		g.drawRect(toolbarPosX, toolbarPosY, toolbarSizeX, toolbarSizeY);
 		
 		// Options
-		g.setFont(GraphicsFont.getFont("MenuOption"));
 		for(int opt=0;opt<optCount;opt+=1)
 		{
+			// Highlight
 			if(mouse.nexusCheckRef()==optRefNexus[opt])
 			{
 				g.setColor(GraphicsStyle.getColour("ToolbarFillHover"));
-				g.fillRect(optPosX[opt], toolbarPosY+1, optSizeX[opt], toolbarSizeY-1);
+				g.fillRect(optPosX[opt], toolbarPosY, optSizeX[opt], toolbarSizeY);
 			}
+			
+			// Border
+			g.setColor(GraphicsStyle.getColour("MenuBorder"));
+			g.drawRect(optPosX[opt], toolbarPosY, optSizeX[opt], toolbarSizeY);
+			
+			// Option Text
 			g.setColor(GraphicsStyle.getColour("ToolbarText"));
 			if(keyboard.getModifierPressed("ALT")==true)
 			{
@@ -100,6 +115,7 @@ public class ControlToolbar
 			}
 			else
 			{
+				g.setFont(GraphicsFont.getFont("MenuOption"));
 				g.drawString(optText[opt], optTextX[opt], toolbarPosY+24);
 			}
 			

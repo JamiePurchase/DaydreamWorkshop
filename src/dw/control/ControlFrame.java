@@ -52,7 +52,7 @@ public class ControlFrame
 	public void render(Graphics g, InputMouse mouse)
 	{
 		// Padding
-		g.setColor(GraphicsStyle.getColour("FrameFill"));
+		/*g.setColor(GraphicsStyle.getColour("FrameFill"));
 		g.fillRect(0, 0, 10, frameSizeY);
 		g.fillRect(0, 0, frameSizeX, 40);
 		g.fillRect(frameSizeX-10, 0, frameSizeX, frameSizeY);
@@ -61,7 +61,19 @@ public class ControlFrame
 		// Border
 		g.setColor(GraphicsStyle.getColour("FrameBorder"));
 		g.drawRect(0, 0, frameSizeX-1, frameSizeY-1);
-		g.drawRect(10, 40, frameSizeX-20, frameSizeY-50);
+		g.drawRect(10, 40, frameSizeX-20, frameSizeY-50);*/
+		
+		// Padding
+		g.setColor(GraphicsStyle.getColour("FrameFill"));
+		g.fillRect(framePosX, framePosY, 10, frameSizeY);
+		g.fillRect(framePosX, framePosY, frameSizeX, 40);
+		g.fillRect(frameSizeX-10, framePosY, frameSizeX, frameSizeY);
+		g.fillRect(framePosX, frameSizeY-10, frameSizeX, frameSizeY);
+		
+		// Border
+		g.setColor(GraphicsStyle.getColour("FrameBorder"));
+		g.drawRect(framePosX, framePosY, frameSizeX-1, frameSizeY-1);
+		g.drawRect(framePosX+10, framePosY+40, frameSizeX-20, frameSizeY-50);
 		
 		// Temp (drag)
 		if(mouse.mouseActionPressedL==true && mouse.nexusCheckRef()==frameMoveHandle)
@@ -92,10 +104,11 @@ public class ControlFrame
 	
 	public void tick(InputKeyboard keyboard, InputMouse mouse)
 	{
+		if(mouse.mouseActionPressedL==true && mouse.nexusCheckRef()==frameMoveHandle){tickHandle(mouse);}
 		//if(frameMoveNow==true){tickHandle(mouse);}
-		//else if(mouse.mouseActionPressedL==true){tickNexus(mouse);}
+		else if(mouse.mouseActionPressedL==true){tickNexus(mouse);}
 		
-		if(mouse.mouseActionPressedL==true){tickNexus(mouse);}
+		//if(mouse.mouseActionPressedL==true){tickNexus(mouse);}
 	}
 	
 	public void tickHandle(InputMouse mouse)
@@ -108,17 +121,19 @@ public class ControlFrame
 		{
 			int offsetX = frameMoveStartX - mouse.mouseDragEndX;
 			int offsetY = frameMoveStartY - mouse.mouseDragEndY;
+			framePosX -= offsetX;
+			framePosY -= offsetY;
 		}
 	}
 	
 	public void tickNexus(InputMouse mouse)
 	{
-		/*if(mouse.mouseNexusClick==frameMoveHandle)
+		if(mouse.mouseNexusClick==frameMoveHandle)
 		{
 			frameMoveNow = true;
 			frameMoveStartX = mouse.mouseCoordsX;
 			frameMoveStartY = mouse.mouseCoordsY;
-		}*/
+		}
 		if(mouse.mouseNexusClick==frameQuitNexus && frameQuitActive==true)
 		{
 			mouse.mouseActionDone();
