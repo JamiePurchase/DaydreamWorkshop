@@ -1,16 +1,14 @@
 package dw.control;
-import dw.graphics.GraphicsDrawing;
 import dw.graphics.GraphicsFont;
+import dw.graphics.GraphicsStyle;
 import dw.input.InputKeyboard;
 import dw.input.InputMouse;
 
-import java.awt.Color;
 import java.awt.Graphics;
 
 public class ControlToolbar
 {
 	// Toolbar
-	private Color toolbarBkg;
 	private int toolbarPosX;
 	private int toolbarPosY;
 	private String toolbarRef;
@@ -28,14 +26,24 @@ public class ControlToolbar
 	private boolean[] optSelect = new boolean[10];
 	private ControlMenu[] optChildMenu = new ControlMenu[10];
 
-	public ControlToolbar(String newRef, int newPosX, int newPosY, int newSizeX, int newSizeY, Color newBkg)
+	public ControlToolbar(String newRef, int newPosX, int newPosY, int newSizeX, int newSizeY)
 	{
 		toolbarRef = newRef;
 		toolbarPosX = newPosX;
 		toolbarPosY = newPosY; 
 		toolbarSizeX = newSizeX;
 		toolbarSizeY = newSizeY;
-		toolbarBkg = newBkg;
+	}
+	
+	private void menuCloseAllOthers(int id)
+	{
+		for(int opt=0;opt<optCount;opt+=1)
+		{
+			if(opt!=id && optType[opt]=="MENU")
+			{
+				optChildMenu[opt].menuSetActive(false);
+			}
+		}
 	}
 	
 	public void optionAdd(String newText, String newType, int newTextX, int newSizeX, InputMouse mouse)
@@ -52,11 +60,6 @@ public class ControlToolbar
 		optRefNexus[optCount] = newNexus;
 		optSelect[optCount] = false;
 		optCount += 1;
-		
-		// Debug
-		System.out.println("Added nexus for the new toolbar option ("+newText+")");
-		int nH = toolbarSizeY-1;
-		System.out.println(newNexus + "x " + optPosX[optCount] + ", y " + toolbarPosY+1 + ", w " + optSizeX[optCount] + ", h " + nH);
 	}
 	
 	public void optionAttachMenu(int opt, ControlMenu newMenu)
@@ -68,23 +71,23 @@ public class ControlToolbar
 	public void render(Graphics g, InputMouse mouse)
 	{
 		// Background
-		g.setColor(toolbarBkg);
+		g.setColor(GraphicsStyle.getColour("ToolbarFill"));
 		g.fillRect(toolbarPosX, toolbarPosY, toolbarSizeX, toolbarSizeY);
 		
 		// Border
-		g.setColor(Color.BLACK);
+		g.setColor(GraphicsStyle.getColour("ToolbarBorder"));
 		g.drawRect(toolbarPosX, toolbarPosY, toolbarSizeX, toolbarSizeY);
 		
 		// Options
-		g.setFont(GraphicsFont.getFont("ModuleFrameMenu"));
+		g.setFont(GraphicsFont.getFont("MenuOption"));
 		for(int opt=0;opt<optCount;opt+=1)
 		{
 			if(mouse.nexusCheckRef()==optRefNexus[opt])
 			{
-				g.setColor(GraphicsDrawing.getColorRGB(75,200,75));
+				g.setColor(GraphicsStyle.getColour("ToolbarFillHover"));
 				g.fillRect(optPosX[opt], toolbarPosY+1, optSizeX[opt], toolbarSizeY-1);
 			}
-			g.setColor(Color.BLACK);
+			g.setColor(GraphicsStyle.getColour("ToolbarText"));
 			g.drawString(optText[opt], optTextX[opt], toolbarPosY+24);
 			
 			// Temp
@@ -108,20 +111,12 @@ public class ControlToolbar
 	
 	public void tickNexus(InputMouse mouse)
 	{
-		// Debug
-		System.out.println("Toolbar tickNexus (nexus = " + mouse.mouseNexusClick + ")");
-		
 		for(int opt=0;opt<optCount;opt+=1)
 		{
-			// Debug
-			System.out.println(" - checking opt " + opt + ": " + optText[opt] + " (" + optRefNexus[opt] + ")");
-			
 			if(mouse.mouseNexusClick==optRefNexus[opt])
 			{
-				// Debug
-				System.out.println("EXPAND " + opt);
-				
 				if(optType[opt]=="MENU"){optChildMenu[opt].menuExpand();}
+				menuCloseAllOthers(opt);
 			}
 		}
 	}

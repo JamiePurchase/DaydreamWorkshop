@@ -1,5 +1,6 @@
 package dw.control;
 import dw.graphics.GraphicsFont;
+import dw.graphics.GraphicsStyle;
 import dw.input.InputKeyboard;
 import dw.input.InputMouse;
 
@@ -10,7 +11,6 @@ public class ControlMenu
 {
 	// Menu
 	private boolean menuActive;
-	private Color menuBkg;
 	private int menuPosX;
 	private int menuPosY;
 	private int menuSizeX;
@@ -23,13 +23,12 @@ public class ControlMenu
 	private String[] optRefNexus = new String[10];
 	private boolean[] optSelect = new boolean[10];
 	
-	public ControlMenu(String newRef, int newPosX, int newPosY, int newSizeX, Color newBkg, InputMouse mouse)
+	public ControlMenu(String newRef, int newPosX, int newPosY, int newSizeX, InputMouse mouse)
 	{
 		menuRef = newRef;
 		menuPosX = newPosX;
 		menuPosY = newPosY;
 		menuSizeX = newSizeX;
-		menuBkg = newBkg;
 		menuActive = false;
 		optCount = 0;
 	}
@@ -38,9 +37,6 @@ public class ControlMenu
 	{
 		if(menuActive==true){menuActive = false;}
 		else{menuActive = true;}
-		
-		// Debug
-		System.out.println("Expanded " + menuRef + " (now " + menuActive + ")");
 	}
 	
 	public boolean menuGetActive()
@@ -62,35 +58,31 @@ public class ControlMenu
 		optRefNexus[optCount] = newNexus;
 		optSelect[optCount] = false;
 		optCount += 1;
-		
-		// Debug
-		System.out.println("Added nexus for the new toolbar option ("+newText+")");
-		System.out.println(newNexus + "x " + menuPosX + ", y " + menuPosY+(35*optCount) + ", w " + menuSizeX + ", h 35");
 	}
 	
 	public void render(Graphics g, InputMouse mouse)
 	{
 		if(menuActive==true)
 		{
-			// Debug
-			System.out.println("Rendering " + menuRef + " (optionCount: " + optCount + ")");
-			
-			g.setFont(GraphicsFont.getFont("ModuleFrameMenu"));
+			g.setFont(GraphicsFont.getFont("MenuOption"));
 			for(int opt=0;opt<optCount;opt+=1)
 			{
-				g.setColor(Color.GRAY);
-				if(mouse.nexusCheckRef()==optRefNexus[opt]){g.setColor(Color.WHITE);}
+				g.setColor(GraphicsStyle.getColour("MenuFill"));
+				if(mouse.nexusCheckRef()==optRefNexus[opt]){g.setColor(GraphicsStyle.getColour("MenuFillHover"));}
 				g.fillRect(menuPosX, menuPosY+(35*opt), menuSizeX, 35);
-				g.setColor(Color.BLACK);
+				g.setColor(GraphicsStyle.getColour("MenuText"));
 				g.drawRect(menuPosX, menuPosY+(35*opt), menuSizeX, 35);
-				g.drawString(optText[opt], menuPosX+22, menuPosY+(35*opt)+10);
+				g.drawString(optText[opt], menuPosX+10, menuPosY+(35*opt)+25);
 			}
 		}
 	}
 	
 	public void tick(InputKeyboard keyboard, InputMouse mouse)
 	{
-	
+		if(menuActive==true)
+		{
+			// NOTE: While type menu expands a child menu, type action does something different
+		}
 	}
 	
 }
