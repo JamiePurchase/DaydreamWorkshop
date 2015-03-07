@@ -42,12 +42,8 @@ public class ModuleApp extends Module
 	
 	public void dialogRequest(String dialog)
 	{
-		if(dialog=="ProjectNew")
-		{
-			moduleDialog = new ControlDialog("New Project", (appWidth/2)-400, (appHeight/2)-250, 800, 500);
-			moduleDialogActive = true;
-			moduleDialog.formAddText(new ControlText("NewProjectName", 30, 400, 400, 200, 50, appMouse), true);
-		}
+		moduleDialog = Editor.appModules.dialogFetch(dialog);
+		moduleDialogActive = true;
 		Editor.appModules.requestDialogDone();
 	}
 	
@@ -91,7 +87,7 @@ public class ModuleApp extends Module
 		int toolbarHelpID = moduleToolbar.optionAdd("HELP", "MENU", 286, 120, mouse);
 		ControlMenu toolbarHelpMenu = new ControlMenu("ToolbarAppMenuHelp", 250, 75, 160, mouse);
 		toolbarHelpMenu.optionAdd("GUIDE", mouse);
-		toolbarHelpMenu.optionAdd("ABOUT", mouse);
+		toolbarHelpMenu.optionAdd("ABOUT", mouse, "DIALOG", "About");
 		moduleToolbar.optionAttachMenu(toolbarHelpID, toolbarHelpMenu);
 	}
 	

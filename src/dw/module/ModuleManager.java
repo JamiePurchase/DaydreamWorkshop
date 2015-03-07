@@ -1,4 +1,7 @@
 package dw.module;
+import dw.control.ControlButton;
+import dw.control.ControlDialog;
+import dw.control.ControlText;
 import dw.input.InputKeyboard;
 import dw.input.InputMouse;
 
@@ -10,9 +13,14 @@ public class ModuleManager
 	private InputKeyboard appKeyboard;
 	private InputMouse appMouse;
 	
-	// Dialog
+	// Dialog (OLD)
 	private String dialogRequest;
 	private boolean dialogRequestActive = false;
+	
+	// Dialog
+	private ControlDialog dialogAppAbout;
+	private ControlDialog dialogAppProjectNew;
+	private ControlDialog dialogIntro;
 	
 	// Modules (OLD)
 	private int moduleActive;
@@ -45,6 +53,13 @@ public class ModuleManager
 		return newPos;
 	}
 	
+	public ControlDialog dialogFetch(String dialog)
+	{
+		if(dialog=="About"){return dialogAppAbout;}
+		if(dialog=="ProjectNew"){return dialogAppProjectNew;}
+		return dialogIntro;
+	}
+	
 	public Module getActive()
 	{
 		return moduleArray[moduleActive];
@@ -58,6 +73,37 @@ public class ModuleManager
 	}
 	
 	public void init()
+	{
+		initDialog();
+		initModule();
+	}
+	
+	public void initDialog()
+	{
+		initDialogAppAbout();
+		initDialogAppProjectNew();
+		initDialogIntro();
+	}
+	
+	public void initDialogAppAbout()
+	{
+		dialogAppAbout = new ControlDialog("About", (appWidth/2)-400, (appHeight/2)-250, 800, 500);
+		//dialogAppAbout.
+		dialogAppAbout.formAddButton(new ControlButton("AboutOk", "OK", (appWidth/2)-50, 400, 100, 50, "DISMISS", ""));
+	}
+	
+	public void initDialogAppProjectNew()
+	{
+		dialogAppProjectNew = new ControlDialog("New Project", (appWidth/2)-400, (appHeight/2)-250, 800, 500);
+		dialogAppProjectNew.formAddText(new ControlText("NewProjectName", 30, 400, 400, 200, 50, appMouse), true);
+	}
+	
+	public void initDialogIntro()
+	{
+		
+	}
+	
+	public void initModule()
 	{
 		initModuleApp();
 		initModuleAudio();
