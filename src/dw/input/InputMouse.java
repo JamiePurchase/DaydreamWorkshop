@@ -27,6 +27,7 @@ public class InputMouse extends MouseAdapter implements MouseMotionListener
 		mouseActionPressedL = false;
 		mouseActionPressedR = false;
 		mouseActionPressedW = false;
+		mouseNexusClick = "";
 	}
     
     public void mouseDragged(MouseEvent e)

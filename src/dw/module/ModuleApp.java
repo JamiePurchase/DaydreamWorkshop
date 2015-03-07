@@ -1,4 +1,6 @@
 package dw.module;
+import dw.control.ControlFrame;
+import dw.control.ControlToolbar;
 import dw.graphics.GraphicsDrawing;
 import dw.graphics.GraphicsFont;
 import dw.input.InputKeyboard;
@@ -9,21 +11,35 @@ import java.awt.Graphics;
 
 public class ModuleApp extends Module
 {
+	private ControlFrame frame;
+	private ControlToolbar toolbar;
+	
 	public ModuleApp(int width, int height, InputKeyboard keyboard, InputMouse mouse)
 	{
-		initNexus(width, height, keyboard, mouse);
+		initFrame(width, height, keyboard, mouse);
+		initToolbar(width, mouse);
 	}
 	
-	public void initNexus(int width, int height, InputKeyboard keyboard, InputMouse mouse)
+	public void initFrame(int width, int height, InputKeyboard keyboard, InputMouse mouse)
 	{
-		mouse.nexusAdd("EditorFrameButtonClose", width-38, 7, 26, 26);
+		frame = new ControlFrame("AppFrame", "Daydream Workshop", 0, 0, width, height, GraphicsDrawing.getColorRGB(25,150,25), true, mouse);
+	}
+	
+	public void initToolbar(int width, InputMouse mouse)
+	{
+		toolbar = new ControlToolbar("ToolbarApp",10, 40, width-20, 35, GraphicsDrawing.getColorRGB(15,100,15));
+		toolbar.optionAdd("EDITOR", "MENU", 33, 120, mouse);
+		toolbar.optionAdd("ABOUT", "MENU", 153, 100, mouse);
 	}
 	
 	public void render(Graphics g, int width, int height, InputMouse mouse)
 	{
 		renderBackground(g, width, height);
-		renderFrame(g, width, height, mouse);
-		renderToolbar(g, width);
+		frame.render(g, mouse);
+		toolbar.render(g, mouse);
+		
+		// Temp (clicking in one place then hovering over a link was activating
+		mouse.mouseActionDone();
 	}
 	
 	public void renderBackground(Graphics g, int width, int height)
@@ -32,61 +48,10 @@ public class ModuleApp extends Module
 		g.fillRect(0, 0, width, height);
 	}
 	
-	public void renderFrame(Graphics g, int width, int height, InputMouse mouse)
-	{
-		// Padding
-		g.setColor(GraphicsDrawing.getColorRGB(25,150,25));
-		g.fillRect(0, 0, 10, height);
-		g.fillRect(0, 0, width, 40);
-		g.fillRect(width-10, 0, width, height);
-		g.fillRect(0, height-10, width, height);
-		
-		// Border
-		g.setColor(Color.BLACK);
-		g.drawRect(0, 0, width-1, height-1);
-		g.drawRect(10, 40, width-20, height-50);
-
-		// Title
-		g.setFont(GraphicsFont.getFont("ModuleFrameTitle"));
-		g.drawString("Daydream Workshop", 28, 28);
-
-		// Exit Button
-		g.setColor(GraphicsDrawing.getColorRGB(150,25,25));
-		if(mouse.nexusCheckRef()=="EditorFrameButtonClose"){g.setColor(GraphicsDrawing.getColorRGB(200,25,25));}
-		g.fillRect(width-38, 7, 26, 26);
-		g.setColor(Color.BLACK);
-		g.drawRect(width-38, 7, 26, 26);
-		g.setFont(GraphicsFont.getFont("ModuleFrameTitle"));
-		g.drawString("x", width-30, 27);
-	}
-	
-	public void renderToolbar(Graphics g, int width)
-	{
-	}
-	
 	public void tick(InputKeyboard keyboard, InputMouse mouse)
 	{
-		tickInputKeyboard(keyboard);
-		tickInputMouse(mouse);
-	}
-	
-	public void tickInputKeyboard(InputKeyboard keyboard)
-	{
-		if(keyboard.getKeyPressed()=="Space" || keyboard.getKeyPressed()=="Enter")
-		{
-			System.out.println("Keyboard pressed...");
-		}
-	}
-	
-	public void tickInputMouse(InputMouse mouse)
-	{
-		if(mouse.mouseActionPressedL==true)
-		{
-			if(mouse.mouseNexusClick=="EditorFrameButtonClose")
-			{
-				System.exit(0);
-			}
-		}
+		frame.tick(keyboard, mouse);
+		toolbar.tick(keyboard, mouse);
 	}
 
 }
