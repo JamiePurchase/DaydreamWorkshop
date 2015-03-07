@@ -76,7 +76,7 @@ public class ModuleApp extends Module
 		int toolbarProjectID = moduleToolbar.optionAdd("PROJECT", "MENU", 25, 120, mouse);
 		ControlMenu toolbarProjectMenu = new ControlMenu("ToolbarAppMenuProject", 10, 75, 200, mouse);
 		toolbarProjectMenu.optionAdd("NEW PROJECT", mouse, "DIALOG", "ProjectNew");
-		toolbarProjectMenu.optionAdd("OPEN PROJECT", mouse, "MODULE", "ProjectOpen");
+		toolbarProjectMenu.optionAdd("LOAD PROJECT", mouse, "MODULE", "ProjectOpen");
 		toolbarProjectMenu.optionAdd("EXIT EDITOR", mouse, "QUIT");
 		moduleToolbar.optionAttachMenu(toolbarProjectID, toolbarProjectMenu);
 		

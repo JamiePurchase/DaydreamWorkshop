@@ -17,20 +17,25 @@ import javax.swing.JPanel;
 public class Editor extends JPanel implements Runnable
 {
 	// Application
-	public static EditorDisplay appDisplay;
 	public String appTitle;
+	public static EditorDisplay appDisplay;
 	public int appWidth, appHeight;
-	private Thread appThread;
-	private boolean appThreadRunning = false;
-	private int appThreadTick;
 	private BufferStrategy appBufferStrategy;
 	private Graphics appGraphics;
+	private String appModule;
+	public static ModuleManager appModules;
+	public static EditorProject appProject;
+	private boolean appPause = false;
+	
+	// Input
 	public InputKeyboard appKeyboard;
 	public InputMouse appMouse;
 	public static boolean appMouseListenClick = true;
-	public static ModuleManager appModules;
-	private String appModule;
-	private boolean appPause = false;
+	
+	// Threads
+	private Thread appThread;
+	private boolean appThreadRunning = false;
+	private int appThreadTick;
 	
 	public Editor(String module, int width, int height)
 	{

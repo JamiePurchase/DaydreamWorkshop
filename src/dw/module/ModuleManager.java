@@ -14,10 +14,14 @@ public class ModuleManager
 	private String dialogRequest;
 	private boolean dialogRequestActive = false;
 	
-	// Modules
+	// Modules (OLD)
 	private int moduleActive;
 	private Module[] moduleArray = new Module[10];
 	private int moduleCount;
+	
+	// Modules
+	private String module;
+	private Module moduleApp;
 	
 	public ModuleManager(String module, int width, int height, InputKeyboard keyboard, InputMouse mouse)
 	{
@@ -25,6 +29,8 @@ public class ModuleManager
 		appHeight = height;
 		appKeyboard = keyboard;
 		appMouse = mouse;
+		init();
+		
 		moduleArray[0] = getModule(module);
 		moduleActive = 0;
 		moduleCount = 1;
@@ -46,8 +52,55 @@ public class ModuleManager
 	
 	private Module getModule(String module)
 	{
-		if(module=="ProjectNew"){return new ModuleProjectNew(appWidth, appHeight, appKeyboard, appMouse, 0, 0, appWidth, appHeight);}
+		//if(module=="ProjectNew"){return new ModuleProjectNew(appWidth, appHeight, appKeyboard, appMouse, 0, 0, appWidth, appHeight);}
+		// NOTE: We shouldn't need this function
 		return new ModuleApp(appWidth, appHeight, appKeyboard, appMouse);
+	}
+	
+	public void init()
+	{
+		initModuleApp();
+		initModuleAudio();
+		initModuleBoard();
+		initModuleCharacter();
+		initModuleItem();
+		initModuleQuest();
+		initModuleTileset();
+	}
+	
+	public void initModuleApp()
+	{
+		moduleApp = new ModuleApp(appWidth, appHeight, appKeyboard, appMouse);
+	}
+	
+	public void initModuleAudio()
+	{
+		//moduleAudio = new ModuleAudio(appWidth, appHeight, appKeyboard, appMouse);
+	}
+	
+	public void initModuleBoard()
+	{
+		
+	}
+	
+	public void initModuleCharacter()
+	{
+		
+	}
+	
+	public void initModuleItem()
+	{
+		
+	}
+	
+	public void initModuleQuest()
+	{
+		
+	}
+	
+	public void initModuleTileset()
+	{
+		
 	}
 	
 	public void requestDialog(String dialog)
