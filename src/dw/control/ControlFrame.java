@@ -16,8 +16,13 @@ public class ControlFrame
 	private int framePosY;
 	private int frameSizeX;
 	private int frameSizeY;
+	private boolean frameMoveActive;
+	private String frameMoveHandle;
+	private boolean frameMoveNow;
+	private int frameMoveStartX;
+	private int frameMoveStartY;
 	
-	public ControlFrame(String newRef, String newTitle, int newPosX, int newPosY, int newSizeX, int newSizeY, boolean newQuit, InputMouse mouse)
+	public ControlFrame(String newRef, String newTitle, int newPosX, int newPosY, int newSizeX, int newSizeY, boolean newMove, boolean newQuit, InputMouse mouse)
 	{
 		frameRef = newRef;
 		frameTitle = newTitle;
@@ -25,12 +30,23 @@ public class ControlFrame
 		framePosY = newPosY;
 		frameSizeX = newSizeX;
 		frameSizeY = newSizeY;
+		frameMoveActive = newMove;
+		frameMoveNow = false;
 		frameQuitActive = newQuit;
-		if(frameQuitActive==true)
-		{
-			frameQuitNexus = frameRef + "-quit";
-			mouse.nexusAdd(frameQuitNexus, frameSizeX-38, framePosY+7, 26, 26);
-		}
+		if(frameMoveActive==true){initFrameHandle(mouse);}
+		if(frameQuitActive==true){initButtonQuit(mouse);}
+	}
+	
+	public void initFrameHandle(InputMouse mouse)
+	{
+		frameMoveHandle = frameRef + "-handle";
+		mouse.nexusAdd(frameMoveHandle, 0, 0, frameSizeX, 40);
+	}
+	
+	public void initButtonQuit(InputMouse mouse)
+	{
+		frameQuitNexus = frameRef + "-quit";
+		mouse.nexusAdd(frameQuitNexus, frameSizeX-38, framePosY+7, 26, 26);
 	}
 	
 	public void render(Graphics g, InputMouse mouse)
@@ -46,6 +62,15 @@ public class ControlFrame
 		g.setColor(GraphicsStyle.getColour("FrameBorder"));
 		g.drawRect(0, 0, frameSizeX-1, frameSizeY-1);
 		g.drawRect(10, 40, frameSizeX-20, frameSizeY-50);
+		
+		// Temp (drag)
+		if(mouse.mouseActionPressedL==true && mouse.nexusCheckRef()==frameMoveHandle)
+		{
+			System.out.println("DRAGGING");
+			g.setColor(GraphicsStyle.getColour("FrameBorder"));
+			g.drawRect(1, 1, frameSizeX-2, frameSizeY-2);
+			g.drawRect(2, 2, frameSizeX-3, frameSizeY-3);
+		}
 
 		// Title
 		g.setColor(GraphicsStyle.getColour("FrameText"));
@@ -67,13 +92,36 @@ public class ControlFrame
 	
 	public void tick(InputKeyboard keyboard, InputMouse mouse)
 	{
+		//if(frameMoveNow==true){tickHandle(mouse);}
+		//else if(mouse.mouseActionPressedL==true){tickNexus(mouse);}
+		
 		if(mouse.mouseActionPressedL==true){tickNexus(mouse);}
+	}
+	
+	public void tickHandle(InputMouse mouse)
+	{
+		if(mouse.mouseActionPressedL==false)
+		{
+			frameMoveNow = false;
+		}
+		else
+		{
+			int offsetX = frameMoveStartX - mouse.mouseDragEndX;
+			int offsetY = frameMoveStartY - mouse.mouseDragEndY;
+		}
 	}
 	
 	public void tickNexus(InputMouse mouse)
 	{
+		/*if(mouse.mouseNexusClick==frameMoveHandle)
+		{
+			frameMoveNow = true;
+			frameMoveStartX = mouse.mouseCoordsX;
+			frameMoveStartY = mouse.mouseCoordsY;
+		}*/
 		if(mouse.mouseNexusClick==frameQuitNexus && frameQuitActive==true)
 		{
+			mouse.mouseActionDone();
 			// NOTE: Prompt the user to save if there are unsaved changes
 			System.exit(0);
 		}

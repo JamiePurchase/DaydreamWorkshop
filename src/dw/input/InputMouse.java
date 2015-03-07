@@ -17,6 +17,13 @@ public class InputMouse extends MouseAdapter implements MouseMotionListener
 	public boolean mouseActionPressedR = false;
 	public boolean mouseActionPressedW = false;
 	
+	// Drag
+	public boolean mouseDragActive = false;
+	public int mouseDragStartX;
+	public int mouseDragStartY;
+	public int mouseDragEndX;
+	public int mouseDragEndY;
+	
 	// Nexus
 	public InputMouseNexus[] mouseNexus = new InputMouseNexus[50];
 	public int mouseNexusCount = 0;
@@ -32,8 +39,11 @@ public class InputMouse extends MouseAdapter implements MouseMotionListener
     
     public void mouseDragged(MouseEvent e)
     {
-		mouseCoordsX = e.getX();
-		mouseCoordsY = e.getY();
+    	mouseDragEndX = e.getX();
+    	mouseDragEndY = e.getY();
+		
+		// Debug
+		//System.out.println("Mouse Dragged "+mouseCoordsX+","+mouseCoordsY);
     }
 
 	public void mouseEntered (MouseEvent e)
@@ -61,12 +71,20 @@ public class InputMouse extends MouseAdapter implements MouseMotionListener
 		if(e.getButton() == MouseEvent.BUTTON2){mouseActionPressedW = true;}
 		if(e.getButton() == MouseEvent.BUTTON3){mouseActionPressedR = true;}
 		mouseNexusClick = nexusCheckRef();
+		
+		// Temp
+		mouseDragActive = true;
+		mouseDragStartX = mouseCoordsX;
+		mouseDragStartY = mouseCoordsY;
 	}
 
 	@Override
 	public void mouseReleased (MouseEvent e)
 	{
-		
+		mouseDragActive = false;
+		if(e.getButton() == MouseEvent.BUTTON1){mouseActionPressedL = false;}
+		if(e.getButton() == MouseEvent.BUTTON2){mouseActionPressedW = false;}
+		if(e.getButton() == MouseEvent.BUTTON3){mouseActionPressedR = false;}
 	}
 	
 	public void nexusAdd(String ref, int posX, int posY, int width, int height)

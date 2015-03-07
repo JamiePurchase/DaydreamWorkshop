@@ -3,6 +3,9 @@ import dw.graphics.GraphicsFont;
 import dw.graphics.GraphicsStyle;
 import dw.input.InputKeyboard;
 import dw.input.InputMouse;
+import dw.module.Module;
+import dw.module.ModuleApp;
+import dw.module.ModuleProjectNew;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -22,6 +25,9 @@ public class ControlMenu
 	private String[] optType = new String[10];
 	private String[] optRefNexus = new String[10];
 	private boolean[] optSelect = new boolean[10];
+	private ControlMenu[] optLinkMenu = new ControlMenu[10];
+	private Module[] optLinkModule = new Module[10];
+	private int optLinkActive = 0; 
 	
 	public ControlMenu(String newRef, int newPosX, int newPosY, int newSizeX, InputMouse mouse)
 	{
@@ -31,6 +37,13 @@ public class ControlMenu
 		menuSizeX = newSizeX;
 		menuActive = false;
 		optCount = 0;
+	}
+	
+	public int menuGetLink()
+	{
+		int linkActive = optLinkActive;
+		optLinkActive = 0;
+		return linkActive;
 	}
 	
 	public void menuExpand()
@@ -49,15 +62,37 @@ public class ControlMenu
 		menuActive = active;
 	}
 	
-	public void optionAdd(String newText, String newType, InputMouse mouse)
+	public int optionAdd(String newText, InputMouse mouse)
 	{
+		int newOpt = optCount;
 		optText[optCount] = newText;
-		optType[optCount] = newType;
+		optType[optCount] = "";
 		String newNexus = menuRef + "-opt" + optCount;
 		mouse.nexusAdd(newNexus, menuPosX, menuPosY+(35*optCount), menuSizeX, 35);
 		optRefNexus[optCount] = newNexus;
 		optSelect[optCount] = false;
 		optCount += 1;
+		return optCount;
+	}
+	
+	public void optionAdd(String newText, InputMouse mouse, String newKeyword)
+	{
+		int newOpt = optionAdd(newText, mouse);
+		optType[newOpt] = newKeyword;
+	}
+	
+	public void optionAdd(String newText, InputMouse mouse, Module newModule)
+	{
+		int newOpt = optionAdd(newText, mouse);
+		optType[newOpt] = "MODULE";
+		optLinkModule[newOpt] = newModule;
+	}
+	
+	public void optionAdd(String newText, InputMouse mouse, ControlMenu newMenu)
+	{
+		int newOpt = optionAdd(newText, mouse);
+		optType[newOpt] = "MENU";
+		optLinkMenu[newOpt] = newMenu;
 	}
 	
 	public void render(Graphics g, InputMouse mouse)
@@ -81,7 +116,18 @@ public class ControlMenu
 	{
 		if(menuActive==true)
 		{
-			// NOTE: While type menu expands a child menu, type action does something different
+			for(int opt=0;opt<optCount;opt+=1)
+			{
+				if(mouse.mouseNexusClick==optRefNexus[opt])
+				{
+					if(optType[opt]=="MODULE")
+					{
+						optLinkActive = opt;
+						menuActive = false;
+					}
+					mouse.mouseActionDone();
+				}
+			}
 		}
 	}
 	

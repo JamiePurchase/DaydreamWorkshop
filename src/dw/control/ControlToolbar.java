@@ -5,6 +5,8 @@ import dw.input.InputKeyboard;
 import dw.input.InputMouse;
 
 import java.awt.Graphics;
+import java.awt.font.TextAttribute;
+import java.text.AttributedString;
 
 public class ControlToolbar
 {
@@ -46,7 +48,7 @@ public class ControlToolbar
 		}
 	}
 	
-	public void optionAdd(String newText, String newType, int newTextX, int newSizeX, InputMouse mouse)
+	public int optionAdd(String newText, String newType, int newTextX, int newSizeX, InputMouse mouse)
 	{
 		int newOption = optCount;
 		optText[optCount] = newText;
@@ -60,6 +62,7 @@ public class ControlToolbar
 		optRefNexus[optCount] = newNexus;
 		optSelect[optCount] = false;
 		optCount += 1;
+		return newOption;
 	}
 	
 	public void optionAttachMenu(int opt, ControlMenu newMenu)
@@ -68,7 +71,7 @@ public class ControlToolbar
 		optChildMenu[opt] = newMenu;
 	}
 	
-	public void render(Graphics g, InputMouse mouse)
+	public void render(Graphics g, InputKeyboard keyboard, InputMouse mouse)
 	{
 		// Background
 		g.setColor(GraphicsStyle.getColour("ToolbarFill"));
@@ -88,7 +91,17 @@ public class ControlToolbar
 				g.fillRect(optPosX[opt], toolbarPosY+1, optSizeX[opt], toolbarSizeY-1);
 			}
 			g.setColor(GraphicsStyle.getColour("ToolbarText"));
-			g.drawString(optText[opt], optTextX[opt], toolbarPosY+24);
+			if(keyboard.getModifierPressed("ALT")==true)
+			{
+				AttributedString as = new AttributedString(optText[opt]);
+				as.addAttribute(TextAttribute.FONT, GraphicsFont.getFont("MenuOption"));
+				as.addAttribute(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON, 0, 1);
+				g.drawString(as.getIterator(), optTextX[opt], toolbarPosY+24);
+			}
+			else
+			{
+				g.drawString(optText[opt], optTextX[opt], toolbarPosY+24);
+			}
 			
 			// Temp
 			if(optType[opt]=="MENU"){optChildMenu[opt].render(g, mouse);}
@@ -97,6 +110,10 @@ public class ControlToolbar
 	
 	public void tick(InputKeyboard keyboard, InputMouse mouse)
 	{
+		for(int opt=0;opt<optCount;opt+=1)
+		{
+			if(optType[opt]=="MENU"){optChildMenu[opt].tick(keyboard, mouse);}
+		}
 		//tickKeyboard(keyboard);
 		if(mouse.mouseActionPressedL==true){tickNexus(mouse);}
 	}
@@ -117,6 +134,7 @@ public class ControlToolbar
 			{
 				if(optType[opt]=="MENU"){optChildMenu[opt].menuExpand();}
 				menuCloseAllOthers(opt);
+				mouse.mouseActionDone();
 			}
 		}
 	}

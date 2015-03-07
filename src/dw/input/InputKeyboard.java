@@ -7,6 +7,8 @@ public class InputKeyboard implements KeyListener
 {
 	private static String keyPressed = "None";
 	private static String keyReleased = "None";
+	private boolean keyModifierAlt = false;
+	private boolean keyModifierShift = false;
 	
 	public static String getKeyPressed()
 	{
@@ -16,6 +18,13 @@ public class InputKeyboard implements KeyListener
 	public static String getKeyReleased()
 	{
 		return keyReleased;
+	}
+	
+	public boolean getModifierPressed(String key)
+	{
+		if(key=="ALT"){return keyModifierAlt;}
+		if(key=="SHIFT"){return keyModifierShift;}
+		return false;
 	}
 
     public void keyTyped(KeyEvent e)
@@ -39,6 +48,10 @@ public class InputKeyboard implements KeyListener
         if(e.getKeyCode() == KeyEvent.VK_S){keyPressed = "S";}
         if(e.getKeyCode() == KeyEvent.VK_Q){keyPressed = "Q";}
         if(e.getKeyCode() == KeyEvent.VK_W){keyPressed = "W";}
+        
+        // Temp
+        if(e.getKeyCode() == KeyEvent.VK_ALT){keyModifierAlt = true;}
+        if(e.getKeyCode() == KeyEvent.VK_SHIFT){keyModifierAlt = true;}
     }
 
     public void keyReleased(KeyEvent e)
@@ -54,6 +67,10 @@ public class InputKeyboard implements KeyListener
         if(e.getKeyCode() == KeyEvent.VK_S){keyReleased = "S";}
         if(e.getKeyCode() == KeyEvent.VK_Q){keyReleased = "Q";}
         if(e.getKeyCode() == KeyEvent.VK_W){keyReleased = "W";}
+        
+        // Temp
+        if(e.getKeyCode() == KeyEvent.VK_ALT){keyModifierAlt = false;}
+        if(e.getKeyCode() == KeyEvent.VK_SHIFT){keyModifierAlt = false;}
     }
     
 	public static void keyPressedDone()
