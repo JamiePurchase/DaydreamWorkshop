@@ -51,7 +51,7 @@ public class Editor extends JPanel implements Runnable
 	
 	private void moduleInit()
 	{
-		moduleNew(new ModuleApp(), 0);
+		moduleNew(new ModuleApp(appWidth, appHeight, appKeyboard, appMouse), 0);
 		moduleSetActive(0);
 		moduleCount = 1;
 	}
@@ -80,7 +80,7 @@ public class Editor extends JPanel implements Runnable
 			return;
 		}
 		appGraphics = appBufferStrategy.getDrawGraphics();
-		moduleGetActive().render(appGraphics, appWidth, appHeight);
+		moduleGetActive().render(appGraphics, appWidth, appHeight, appMouse);
 		appBufferStrategy.show();
 		appGraphics.dispose();
 	}

@@ -19,7 +19,7 @@ public class EditorDisplay
 		frame = new JFrame(title);
 		frame.setSize(width, height);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//frame.setUndecorated(true);
+		frame.setUndecorated(true);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);

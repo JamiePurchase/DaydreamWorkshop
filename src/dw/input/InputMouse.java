@@ -20,6 +20,7 @@ public class InputMouse extends MouseAdapter implements MouseMotionListener
 	// Nexus
 	public InputMouseNexus[] mouseNexus = new InputMouseNexus[50];
 	public int mouseNexusCount = 0;
+	public String mouseNexusClick = "";
 	
 	public void mouseActionDone()
 	{
@@ -58,6 +59,7 @@ public class InputMouse extends MouseAdapter implements MouseMotionListener
 		if(e.getButton() == MouseEvent.BUTTON1){mouseActionPressedL = true;}
 		if(e.getButton() == MouseEvent.BUTTON2){mouseActionPressedW = true;}
 		if(e.getButton() == MouseEvent.BUTTON3){mouseActionPressedR = true;}
+		mouseNexusClick = nexusCheckRef();
 	}
 
 	@Override
