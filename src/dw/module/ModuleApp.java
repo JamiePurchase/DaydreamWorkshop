@@ -1,5 +1,6 @@
 package dw.module;
 import dw.control.ControlFrame;
+import dw.control.ControlMenu;
 import dw.control.ControlToolbar;
 import dw.graphics.GraphicsDrawing;
 import dw.graphics.GraphicsFont;
@@ -27,9 +28,22 @@ public class ModuleApp extends Module
 	
 	public void initToolbar(int width, InputMouse mouse)
 	{
-		toolbar = new ControlToolbar("ToolbarApp",10, 40, width-20, 35, GraphicsDrawing.getColorRGB(15,100,15));
+		// Toolbar Object
+		toolbar = new ControlToolbar("ToolbarApp", 10, 40, width-20, 35, GraphicsDrawing.getColorRGB(15,100,15));
+		
+		// Editor Menu
 		toolbar.optionAdd("EDITOR", "MENU", 33, 120, mouse);
-		toolbar.optionAdd("ABOUT", "MENU", 153, 100, mouse);
+		ControlMenu menuEditor = new ControlMenu("ToolbarAppMenuEditor", 11, 75, 120, GraphicsDrawing.getColorRGB(25,150,25), mouse);
+		menuEditor.optionAdd("NEW PROJECT", "ACTION", mouse);
+		menuEditor.optionAdd("LOAD PROJECT", "ACTION", mouse);
+		toolbar.optionAttachMenu(0, menuEditor);
+		
+		// About Menu
+		toolbar.optionAdd("HELP", "MENU", 153, 100, mouse);
+		ControlMenu menuHelp = new ControlMenu("ToolbarAppMenuHelp", 133, 75, 120, GraphicsDrawing.getColorRGB(25,150,25), mouse);
+		menuHelp.optionAdd("GUIDE", "ACTION", mouse);
+		menuHelp.optionAdd("ABOUT", "ACTION", mouse);
+		toolbar.optionAttachMenu(1, menuHelp);
 	}
 	
 	public void render(Graphics g, int width, int height, InputMouse mouse)

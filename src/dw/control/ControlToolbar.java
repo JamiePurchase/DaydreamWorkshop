@@ -26,6 +26,7 @@ public class ControlToolbar
 	private int[] optSizeX = new int[10];
 	private String[] optRefNexus = new String[10];
 	private boolean[] optSelect = new boolean[10];
+	private ControlMenu[] optChildMenu = new ControlMenu[10];
 
 	public ControlToolbar(String newRef, int newPosX, int newPosY, int newSizeX, int newSizeY, Color newBkg)
 	{
@@ -39,8 +40,9 @@ public class ControlToolbar
 	
 	public void optionAdd(String newText, String newType, int newTextX, int newSizeX, InputMouse mouse)
 	{
+		int newOption = optCount;
 		optText[optCount] = newText;
-		optType[optCount] = newType;
+		optType[optCount] = "";
 		optTextX[optCount] = newTextX;
 		optSizeX[optCount] = newSizeX;
 		if(optCount>0){optPosX[optCount] = optPosX[optCount-1]+optSizeX[optCount-1];}
@@ -50,6 +52,17 @@ public class ControlToolbar
 		optRefNexus[optCount] = newNexus;
 		optSelect[optCount] = false;
 		optCount += 1;
+		
+		// Debug
+		System.out.println("Added nexus for the new toolbar option ("+newText+")");
+		int nH = toolbarSizeY-1;
+		System.out.println(newNexus + "x " + optPosX[optCount] + ", y " + toolbarPosY+1 + ", w " + optSizeX[optCount] + ", h " + nH);
+	}
+	
+	public void optionAttachMenu(int opt, ControlMenu newMenu)
+	{
+		optType[opt] = "MENU";
+		optChildMenu[opt] = newMenu;
 	}
 	
 	public void render(Graphics g, InputMouse mouse)
@@ -73,14 +86,43 @@ public class ControlToolbar
 			}
 			g.setColor(Color.BLACK);
 			g.drawString(optText[opt], optTextX[opt], toolbarPosY+24);
+			
+			// Temp
+			if(optType[opt]=="MENU"){optChildMenu[opt].render(g, mouse);}
 		}
 	}
 	
 	public void tick(InputKeyboard keyboard, InputMouse mouse)
 	{
+		//tickKeyboard(keyboard);
+		if(mouse.mouseActionPressedL==true){tickNexus(mouse);}
+	}
+	
+	/*public tickKeyboard(InputKeyboard keyboard)
+	{
 		if(keyboard.getKeyPressed()=="Space" || keyboard.getKeyPressed()=="Enter")
 		{
 			System.out.println("Keyboard pressed...");
+		}
+	}*/
+	
+	public void tickNexus(InputMouse mouse)
+	{
+		// Debug
+		System.out.println("Toolbar tickNexus (nexus = " + mouse.mouseNexusClick + ")");
+		
+		for(int opt=0;opt<optCount;opt+=1)
+		{
+			// Debug
+			System.out.println(" - checking opt " + opt + ": " + optText[opt] + " (" + optRefNexus[opt] + ")");
+			
+			if(mouse.mouseNexusClick==optRefNexus[opt])
+			{
+				// Debug
+				System.out.println("EXPAND " + opt);
+				
+				if(optType[opt]=="MENU"){optChildMenu[opt].menuExpand();}
+			}
 		}
 	}
 	
