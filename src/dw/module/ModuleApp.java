@@ -38,6 +38,9 @@ public class ModuleApp extends Module
 		initBackground(width, height);
 		initFrame(width, height, keyboard, mouse);
 		initToolbar(width, height, keyboard, mouse);
+		//
+		FileTest ft = new FileTest();
+		//
 	}
 	
 	public void dialogRequest(String dialog)
