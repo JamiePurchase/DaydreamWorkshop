@@ -126,7 +126,7 @@ public class ControlMenu
 					{
 						menuActive = false;
 						// Note: We should prompt the user to save if there are outstanding changes
-						System.exit(0);
+						Editor.editorTerminate();
 					}
 					mouse.mouseActionDone();
 				}

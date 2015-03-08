@@ -1,10 +1,12 @@
 package dw.control;
+import dw.Editor;
 import dw.graphics.GraphicsFont;
 import dw.graphics.GraphicsStyle;
 import dw.input.InputKeyboard;
 import dw.input.InputMouse;
 
 import java.awt.Graphics;
+import java.util.concurrent.TimeUnit;
 
 public class ControlFrame
 {
@@ -138,7 +140,7 @@ public class ControlFrame
 		{
 			mouse.mouseActionDone();
 			// NOTE: Prompt the user to save if there are unsaved changes
-			System.exit(0);
+			Editor.editorTerminate();
 		}
 	}
 

@@ -1,7 +1,9 @@
 package dw;
 import dw.application.AppWorkshop;
+import dw.audio.AudioManager;
 import dw.file.FileRead;
 import dw.file.FileWrite;
+import dw.graphics.GraphicsDrawing;
 import dw.graphics.GraphicsStyle;
 import dw.input.InputKeyboard;
 import dw.input.InputMouse;
@@ -10,9 +12,11 @@ import dw.module.ModuleApp;
 import dw.module.ModuleManager;
 import dw.module.ModuleProjectNew;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JPanel;
 
@@ -21,14 +25,20 @@ public class Editor extends JPanel implements Runnable
 	// Application
 	public String appTitle;
 	public static EditorDisplay appDisplay;
-	public int appWidth, appHeight;
+	public static int appWidth;
+	public static int appHeight;
 	private BufferStrategy appBufferStrategy;
-	private Graphics appGraphics;
+	private static Graphics appGraphics;
 	private GraphicsStyle appStyle;
 	private String appModule;
 	public static ModuleManager appModules;
 	public static EditorProject appProject;
 	private boolean appPause = false;
+	private static boolean appTerminate = false;
+	private static int appTerminateTick;
+	
+	// Audio
+	public static AudioManager appAudio;
 	
 	// Input
 	public InputKeyboard appKeyboard;
@@ -60,12 +70,21 @@ public class Editor extends JPanel implements Runnable
 		return appPause;
 	}
 	
+	public static void editorTerminate()
+	{
+		appTerminate = true;
+		appTerminateTick = 180;
+		appAudio.playMusic("jasGoodbye");
+	}
+	
 	private void init()
 	{
 		settingsLoad();
 		
 		// Debug
 		System.out.println("Theme = "+settingTheme);
+		appAudio = new AudioManager();
+		appAudio.playMusic("jasWelcome");
 		
 		appKeyboard = new InputKeyboard();
 		appMouse = new InputMouse();
@@ -83,9 +102,17 @@ public class Editor extends JPanel implements Runnable
 			return;
 		}
 		appGraphics = appBufferStrategy.getDrawGraphics();
-		appModules.getActive().render(appGraphics, appWidth, appHeight, appKeyboard, appMouse);
+		if(appTerminate){renderTerminate(appGraphics);}
+		else{appModules.getActive().render(appGraphics, appWidth, appHeight, appKeyboard, appMouse);}
 		appBufferStrategy.show();
 		appGraphics.dispose();
+	}
+	
+	private void renderTerminate(Graphics g)
+	{
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, appWidth, appHeight);
+		g.drawImage(GraphicsDrawing.getImage("ui/logo.png"), (appWidth/2)-150, (appHeight/2)-200+20, null);
 	}
 	
 	public void run()
@@ -204,6 +231,11 @@ public class Editor extends JPanel implements Runnable
 	
 	public void tick()
 	{
+		if(appTerminate)
+		{
+			appTerminateTick -= 1;
+			if(appTerminateTick<1){System.exit(0);}
+		}
 		if(editorPaused())
 		{
 			if(appKeyboard.getKeyPressed()=="Space"){tickTest3();}
