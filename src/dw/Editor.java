@@ -30,8 +30,6 @@ public class Editor extends JPanel implements Runnable
 	private BufferStrategy appBufferStrategy;
 	private static Graphics appGraphics;
 	private GraphicsStyle appStyle;
-	private String appModule;
-	public static ModuleManager appModules;
 	public static EditorProject appProject;
 	private boolean appPause = false;
 	private static boolean appTerminate = false;
@@ -45,6 +43,10 @@ public class Editor extends JPanel implements Runnable
 	public InputMouse appMouse;
 	public static boolean appMouseListenClick = true;
 	
+	// Modules
+	private String appModule;
+	public static ModuleManager appModules;
+	
 	// Settings
 	private static String settingTheme;
 	
@@ -55,9 +57,9 @@ public class Editor extends JPanel implements Runnable
 	
 	public Editor(String module, int width, int height)
 	{
-		this.appModule = module;
 		this.appHeight = height;
 		this.appWidth = width;
+		this.appModule = module;
 	}
 	
 	public void editorPause(boolean pause)
@@ -80,17 +82,14 @@ public class Editor extends JPanel implements Runnable
 	private void init()
 	{
 		settingsLoad();
-		
-		// Debug
-		System.out.println("Theme = "+settingTheme);
 		appAudio = new AudioManager();
 		appAudio.playMusic("jasWelcome");
-		
 		appKeyboard = new InputKeyboard();
 		appMouse = new InputMouse();
 		addMouseListener (appMouse);
 		appDisplay = new EditorDisplay("Daydream Workshop", appWidth, appHeight, appKeyboard, appMouse);
-		appModules = new ModuleManager(appModule, appWidth, appHeight, appKeyboard, appMouse);
+		appModules = new ModuleManager(appWidth, appHeight, appKeyboard, appMouse);
+		appModules.setActive(appModule);
 	}
 
 	private void render()
@@ -236,69 +235,10 @@ public class Editor extends JPanel implements Runnable
 			appTerminateTick -= 1;
 			if(appTerminateTick<1){System.exit(0);}
 		}
-		if(editorPaused())
-		{
-			if(appKeyboard.getKeyPressed()=="Space"){tickTest3();}
-		}
 		else
 		{
-			// Temp
-			if(appKeyboard.getKeyPressed()=="Enter"){tickTest1();}
-			if(appKeyboard.getKeyPressed()=="Escape"){tickTest2();}
-			
-			// See if any menu options have been clicked on
-			//moduleGetActive();
-		
-			// Module Tick
 			appModules.getActive().tick(appKeyboard, appMouse);
 		}
-	}
-	
-	private void tickTest1()
-	{
-		System.out.println("  ~ Editor Test 1 ~  ");
-		appKeyboard.keyPressedDone();
-		
-		// Test 1
-		FileWrite fw = new FileWrite("C:/Eclipse/Workspace/Daydream/data/editor/test1.dwec", false);
-		try {
-			fw.FileWriteLine("Hello world");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		// Test 2
-		/*fw = new FileWrite("C:/Eclipse/Workspace/Daydream/data/editor/test2.txt", true);
-		String[] myArray = new String[5];
-		myArray[0] = "Hello";
-		myArray[1] = "Hiya";
-		myArray[2] = "";
-		myArray[3] = "Hoho";
-		fw.FileWriteArray(myArray);*/
-	}
-	
-	private void tickTest2()
-	{
-		System.out.println("  ~ Editor Test 2 ~  ");
-		appKeyboard.keyPressedDone();
-		
-		// Test
-		String[] arguments = new String[3];
-		arguments[0] = "ProjectNew";
-		arguments[1] = "800";
-		arguments[2] = "500";
-		AppWorkshop.main(arguments);
-		editorPause(true);
-	}
-	
-	private void tickTest3()
-	{
-		System.out.println("  ~ Editor Test 3 ~  ");
-		appKeyboard.keyPressedDone();
-		
-		// Temp
-		editorPause(false);
 	}
 
 }

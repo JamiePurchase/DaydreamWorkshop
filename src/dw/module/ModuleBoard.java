@@ -1,7 +1,5 @@
 package dw.module;
-
-import java.awt.Graphics;
-
+import dw.board.BoardManager;
 import dw.control.ControlDialog;
 import dw.control.ControlFrame;
 import dw.control.ControlMenu;
@@ -10,6 +8,8 @@ import dw.graphics.GraphicsDrawing;
 import dw.graphics.GraphicsStyle;
 import dw.input.InputKeyboard;
 import dw.input.InputMouse;
+
+import java.awt.Graphics;
 
 public class ModuleBoard extends Module
 {
@@ -31,6 +31,7 @@ public class ModuleBoard extends Module
 	private boolean editorViewStructs;
 	
 	// Module
+	private BoardManager moduleBoard;
 	private ControlFrame moduleFrame;
 	private ControlToolbar moduleToolbar;
 	
@@ -40,9 +41,11 @@ public class ModuleBoard extends Module
 		appHeight = height;
 		appKeyboard = keyboard;
 		appMouse = mouse;
-		// init Tiles and Data arrays
 		initFrame(width, height, keyboard, mouse);
 		initToolbar(width, height, keyboard, mouse);
+		
+		// Test
+		moduleBoard = new BoardManager();
 	}
 	
 	public void initFrame(int width, int height, InputKeyboard keyboard, InputMouse mouse)
@@ -84,6 +87,7 @@ public class ModuleBoard extends Module
 		renderBackground(g, width, height);
 		moduleFrame.render(g, mouse);
 		moduleToolbar.render(g, keyboard, mouse);
+		moduleBoard.render(g, width, height);
 		if(moduleDialogActive){moduleDialog.render(g, mouse);}
 	}
 	

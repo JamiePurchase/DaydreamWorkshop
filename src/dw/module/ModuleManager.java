@@ -22,31 +22,18 @@ public class ModuleManager
 	private ControlDialog dialogAppProjectNew;
 	private ControlDialog dialogIntro;
 	
-	// Modules (OLD)
-	private int moduleActive;
-	private Module[] moduleArray = new Module[10];
-	private int moduleCount;
-	
 	// Modules
 	private String module;
 	private Module moduleApp;
+	private Module moduleBoard;
 	
-	public ModuleManager(String module, int width, int height, InputKeyboard keyboard, InputMouse mouse)
+	public ModuleManager(int width, int height, InputKeyboard keyboard, InputMouse mouse)
 	{
 		appWidth = width;
 		appHeight = height;
 		appKeyboard = keyboard;
 		appMouse = mouse;
 		init();
-	}
-	
-	public int addModule(Module newModule, boolean newFocus)
-	{
-		int newPos = moduleCount;
-		moduleArray[newPos] = newModule;
-		if(newFocus==true){moduleActive = newPos;}
-		moduleCount += 1;
-		return newPos;
 	}
 	
 	public ControlDialog dialogFetch(String dialog)
@@ -58,14 +45,9 @@ public class ModuleManager
 	
 	public Module getActive()
 	{
+		if(module=="App"){return moduleApp;}
+		if(module=="Board"){return moduleBoard;}
 		return moduleApp;
-	}
-	
-	private Module getModule(String module)
-	{
-		//if(module=="ProjectNew"){return new ModuleProjectNew(appWidth, appHeight, appKeyboard, appMouse, 0, 0, appWidth, appHeight);}
-		// NOTE: We shouldn't need this function
-		return new ModuleApp(appWidth, appHeight, appKeyboard, appMouse);
 	}
 	
 	public void init()
@@ -122,7 +104,7 @@ public class ModuleManager
 	
 	public void initModuleBoard()
 	{
-		
+		moduleBoard = new ModuleBoard(appWidth, appHeight, appKeyboard, appMouse);
 	}
 	
 	public void initModuleCharacter()
@@ -169,15 +151,15 @@ public class ModuleManager
 	
 	public void requestModule(String module)
 	{
+		setActive(module);
+
 		// Debug
 		System.out.println("Requested the "+module+" module");
-		
-		if(module=="ProjectNew"){addModule(new ModuleProjectNew(appWidth, appHeight, appKeyboard, appMouse, 0, 0, appWidth, appHeight), true);}
 	}
 	
-	public void setActive(int active)
+	public void setActive(String active)
 	{
-		moduleActive = active;
+		module = active;
 	}
 	
 }

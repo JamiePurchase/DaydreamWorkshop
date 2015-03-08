@@ -25,7 +25,7 @@ public class InputMouse extends MouseAdapter implements MouseMotionListener
 	public int mouseDragEndY;
 	
 	// Nexus
-	public InputMouseNexus[] mouseNexus = new InputMouseNexus[50];
+	public InputMouseNexus[] mouseNexus = new InputMouseNexus[500];
 	public int mouseNexusCount = 0;
 	public String mouseNexusClick = "";
 	
@@ -41,9 +41,6 @@ public class InputMouse extends MouseAdapter implements MouseMotionListener
     {
     	mouseDragEndX = e.getX();
     	mouseDragEndY = e.getY();
-		
-		// Debug
-		//System.out.println("Mouse Dragged "+mouseCoordsX+","+mouseCoordsY);
     }
 
 	public void mouseEntered (MouseEvent e)
