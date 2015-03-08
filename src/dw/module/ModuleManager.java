@@ -38,10 +38,6 @@ public class ModuleManager
 		appKeyboard = keyboard;
 		appMouse = mouse;
 		init();
-		
-		moduleArray[0] = getModule(module);
-		moduleActive = 0;
-		moduleCount = 1;
 	}
 	
 	public int addModule(Module newModule, boolean newFocus)
@@ -62,7 +58,7 @@ public class ModuleManager
 	
 	public Module getActive()
 	{
-		return moduleArray[moduleActive];
+		return moduleApp;
 	}
 	
 	private Module getModule(String module)

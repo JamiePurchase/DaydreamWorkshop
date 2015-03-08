@@ -9,7 +9,7 @@ public class FileRead
 	
 	public FileRead(String newPath)
 	{
-		readPath = newPath;
+		readPath = "C:/Eclipse/Workspace/Daydream/data/" + newPath;
 	}
 	
 	public String[] FileReadData() throws IOException

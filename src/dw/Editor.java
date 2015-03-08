@@ -1,6 +1,8 @@
 package dw;
 import dw.application.AppWorkshop;
+import dw.file.FileRead;
 import dw.file.FileWrite;
+import dw.graphics.GraphicsStyle;
 import dw.input.InputKeyboard;
 import dw.input.InputMouse;
 import dw.module.Module;
@@ -22,6 +24,7 @@ public class Editor extends JPanel implements Runnable
 	public int appWidth, appHeight;
 	private BufferStrategy appBufferStrategy;
 	private Graphics appGraphics;
+	private GraphicsStyle appStyle;
 	private String appModule;
 	public static ModuleManager appModules;
 	public static EditorProject appProject;
@@ -31,6 +34,9 @@ public class Editor extends JPanel implements Runnable
 	public InputKeyboard appKeyboard;
 	public InputMouse appMouse;
 	public static boolean appMouseListenClick = true;
+	
+	// Settings
+	private static String settingTheme;
 	
 	// Threads
 	private Thread appThread;
@@ -56,6 +62,11 @@ public class Editor extends JPanel implements Runnable
 	
 	private void init()
 	{
+		settingsLoad();
+		
+		// Debug
+		System.out.println("Theme = "+settingTheme);
+		
 		appKeyboard = new InputKeyboard();
 		appMouse = new InputMouse();
 		addMouseListener (appMouse);
@@ -113,6 +124,47 @@ public class Editor extends JPanel implements Runnable
 			}
 		}
 		stop();
+	}
+	
+	public static String settingsGetTheme()
+	{
+		return settingTheme;
+	}
+	
+	private void settingsLoad()
+	{
+		String[] settings = settingsLoadData();
+		settingsSetTheme(settingsLoadValue(settings[0]));
+	}
+	
+	private String[] settingsLoadData()
+	{
+		String[] fileData = new String[5];
+		FileRead fileRead = new FileRead("editor/settings.dwc");
+		try{fileData = fileRead.FileReadData();}
+		catch (IOException e){e.printStackTrace();}
+		return fileData;
+	}
+	
+	private String settingsLoadValue(String data)
+	{
+		return data.substring(data.indexOf("[")+1, data.indexOf("]"));
+	}
+	
+	private void settingsSave()
+	{
+		// Create an array of settings
+		String[] settings = new String[5];
+		settings[0] = settingsGetTheme();
+		
+		// Overwrite the settings file
+		FileWrite fileSave = new FileWrite("editor/settings.dwc", false);
+		fileSave.FileWriteArray(settings);
+	}
+	
+	private void settingsSetTheme(String theme)
+	{
+		settingTheme = theme;
 	}
 	
 	public synchronized void start()
